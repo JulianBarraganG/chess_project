@@ -10,3 +10,4 @@ enabling you to test your ability to memorize lines and variations of any given 
 numpy
 pandas
 pygame
+os
