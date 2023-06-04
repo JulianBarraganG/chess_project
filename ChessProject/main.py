@@ -11,17 +11,18 @@ WIN = py.display.set_mode((WIDTH, HEIGHT))
 
 py.display.set_caption("Chess")
 
-test_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
-test_fen2 = "2k2b1r/p1p2ppp/4p3/3Q4/3P4/8/P1Pq1PPP/R1R3K1"
+test_fen2 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+test_fen = "2k2b1r/p1p2ppp/4p3/3Q4/3P4/8/P1Pq1PPP/R1R3K1"
 
 
-def draw_window():
+def draw_window(fen):
+   WIN = py.display.set_mode((WIDTH, HEIGHT))
    WIN.fill(WHITE)
-   board(WIN, test_fen2)
+   board(WIN, fen)
    py.display.update()
 
 
-def main():
+def main(fen):
    """clock = py.time.Clock()
    run = True
    while run:
@@ -30,7 +31,7 @@ def main():
            if event.type == py.QUIT:
                run = False"""
        
-   draw_window()
+   draw_window(fen)
    screenshot()
    pygame.quit()
 
