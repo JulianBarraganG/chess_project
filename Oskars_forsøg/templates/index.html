@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chess Board</title>
+    <style>
+        .square {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .white {
+            background-color: #f0d9b5;
+        }
+
+        .black {
+            background-color: #b58863;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chess Board</h1>
+    <form action="/" method="post">
+        <label for="pgn">PGN Notation:</label><br>
+        <textarea id="pgn" name="pgn" rows="5" cols="50"></textarea><br>
+        <input type="submit" value="Display">
+    </form>
+
+    {% if board %}
+        <h2>Moves:</h2>
+        {% for move in moves %}
+            <p>{{ move }}</p>
+        {% endfor %}
+
+        <h2>Board:</h2>
+        {% for row in range(8) %}
+            {% for col in range(8) %}
+                {% set square_color = 'white' if (row + col) % 2 == 0 else 'black' %}
+                <div class="square {{ square_color }}">
+                    {{ board.piece_at(row * 8 + col) }}
+                </div>
+            {% endfor %}
+            <br>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
