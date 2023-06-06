@@ -8,7 +8,18 @@
     <form method="POST" action="/">
         <label for="move">Input next move:</label>
         <input type="text" id="move" name="move">
-        <input type="submit" value="Submit">
+        <input type="submit" name="move" value="move">
+
+
+        <label for="selectOpening">Select opening to practice:</label>
+        <select id="selectOpening" name="selectOpening">
+            {% for opening in openings %}
+            <option value="{{ opening }}">{{ opening }}</option>
+            {% endfor %}
+        </select>
+        
+        
+        <input type="submit" name="selectOpening" value="Practice Opening">
     </form>
     <img src="{{ url_for('static', filename='current_position.png') }}" alt="Current Position">
 </body>
