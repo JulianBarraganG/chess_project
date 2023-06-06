@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Current Position</title>
+</head>
+<body>
+    <h1>Current Position</h1>
+    <form method="POST" action="/">
+        <label for="move">Input next move:</label>
+        <input type="text" id="move" name="move">
+        <input type="submit" value="Submit">
+    </form>
+    <img src="{{ url_for('static', filename='current_position.png') }}" alt="Current Position">
+</body>
+</html>
