@@ -83,6 +83,7 @@ def get_unique():
     cur.execute(unique_openings)
     return (cur.fetchall())
 
+
 print(get_unique())
 
 # Commit the changes and close the cursor and connection
