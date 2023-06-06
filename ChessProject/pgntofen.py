@@ -648,11 +648,9 @@ class PgnToFen:
             return posistionsOnBoard
     
     def pgnToStringList(moves):
-        #TODO: handle better ' 1-0\r\n' 
-        finalString = moves.replace('\r\n', ' ').replace('\n', ' ').replace('  1/2-1/2', '').replace('  0-1', '').replace('  1-0', '')[:-1]
-        #print('finalString DEBUG:', finalString)
+        #TODO: handle better ' 1-0\r\n'
+        finalString = moves.replace('\r\n', ' ').replace('\n', ' ').replace('  1/2-1/2', '').replace('  0-1', '').replace('  1-0', '')
         movesArray = finalString.split(' ')
-        #print('MOVES movesArray:', movesArray)
         karFormat = ''
         for move in movesArray:
             dotIndex = move.find('.')
