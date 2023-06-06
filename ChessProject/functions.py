@@ -45,3 +45,5 @@ def fen_reader(fen, win):
         elif char == '/':
             col += 1
             row = 0
+        elif char.isspace(): 
+            break

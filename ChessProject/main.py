@@ -15,6 +15,8 @@ test_fen2 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 test_fen = "2k2b1r/p1p2ppp/4p3/3Q4/3P4/8/P1Pq1PPP/R1R3K1"
 
 
+
+#Den her funktion tegner vinduet
 def draw_window(fen):
    WIN = py.display.set_mode((WIDTH, HEIGHT))
    WIN.fill(WHITE)
@@ -30,14 +32,16 @@ def main(fen):
        for event in py.event.get():
            if event.type == py.QUIT:
                run = False"""
-       
+   #først bliver vinduet tegnet med den givne fen-string
    draw_window(fen)
+   #så tager vi et screenshot af positionen og gemmer det
    screenshot()
+   #så lukker vi spillet igen
    pygame.quit()
 
 
    #py.quit()
-
+#den her funktion er ansvarlig for at tage et screenshot af positionen og gemme det i static mappen med navnet current_position.pgn
 def screenshot(): 
    screenshot = pygame.surfarray.array3d(pygame.display.get_surface())
    image = pygame.surfarray.make_surface(screenshot)
