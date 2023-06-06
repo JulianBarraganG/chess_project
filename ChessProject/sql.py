@@ -70,7 +70,6 @@ def opening_vars(open:str):
     """
     return (que_vars)
 
-
 #takes as input an opening name, and returns a list of lists, each containting a variation
 def listOfVars(opening_name: str) -> list:
     cur.execute(opening_vars(opening_name))
@@ -80,6 +79,11 @@ def listOfVars(opening_name: str) -> list:
         lst.append(PgnToFen.pgnToStringList(query[i][0]))
     return lst
 
+def get_unique():
+    cur.execute(unique_openings)
+    return (cur.fetchall())
+
+print(get_unique())
 
 # Commit the changes and close the cursor and connection
 conn.commit()
