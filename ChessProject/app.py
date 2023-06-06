@@ -21,6 +21,7 @@ def moving():
         move = request.form['move']
         next_move = main.currentBoard
         next_move = next_move.__add__([move])
+        print(sql.get_check_for_variations(next_move))
         print(next_move)
     return render_template('index.html', openings = opning)
         
