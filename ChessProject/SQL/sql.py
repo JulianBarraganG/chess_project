@@ -13,13 +13,24 @@ conn = psycopg2.connect(
 # Create a cursor object
 cur = conn.cursor()
 
+create_table_sql = """
+    DROP TABLE IF EXISTS Openings;
+    CREATE TABLE Openings (
+        pgn VARCHAR PRIMARY KEY,
+        opening VARCHAR,
+        variation VARCHAR
+    );
+"""
+
+cur.execute(create_table_sql)
+
 # Read the TSV file
 with open('C:\\Users\\hulig\\OneDrive - University of Copenhagen\\ML\\DIS\\ChessProject\\Openings\\a.tsv', 'r') as f:
     next(f)  # Skip the header line
     for line in f:
         data = line.strip().split('\t')
         pgn = data[2]
-        opening = data[1].split(':')[1] if ':' in data[1] else data[1]
+        opening = data[1].split(':')[0] if ':' in data[1] else data[1]
         variation = data[1].split(':')[1] if ':' in data[1] else None
 
         # SQL statement to insert a row
@@ -39,6 +50,7 @@ select_rows_sql = """
     FROM Openings
     LIMIT 10;
 """
+
 cur.execute(select_rows_sql)
 rows = cur.fetchall()
 
