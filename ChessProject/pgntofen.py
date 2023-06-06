@@ -648,7 +648,7 @@ class PgnToFen:
             return posistionsOnBoard
     
     def pgnToStringList(moves):
-        #TODO: handle better ' 1-0\r\n'
+        #TODO: handle better ' 1-0\r\n' 
         finalString = moves.replace('\r\n', ' ').replace('\n', ' ').replace('  1/2-1/2', '').replace('  0-1', '').replace('  1-0', '')[:-1]
         #print('finalString DEBUG:', finalString)
         movesArray = finalString.split(' ')
