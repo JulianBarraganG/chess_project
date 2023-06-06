@@ -3,8 +3,8 @@ from psycopg2 import sql
 from pgntofen import *
 
 #TO BE MODIFIED
-YOUR_PASSWORD = 'type your password here'
-YOUR_PORT = '4 digit por'
+YOUR_PASSWORD = 'Stationsvej5'
+YOUR_PORT = '5432'
 
 # Establish a connection to server (that you setup yourself). OBS! Check that port, password etc. are correct.
 conn = psycopg2.connect(
@@ -33,7 +33,7 @@ cur.execute(create_table_sql)
 files = ['a','b','c','d','e']
 
 # INSERT HERE -- directory filepath to and with Openings. i.g. below.
-your_path = "C:\\Users\\hulig\\OneDrive - University of Copenhagen\\ML\\DIS\\ChessProject\\Openings\\" #remember double backslashes
+your_path = "C:\\Users\\olink\\OneDrive\\Skrivebord\\Chess_project\\chess_project\\ChessProject\\Openings\\" #remember double backslashes
 
 # Read the TSV file
 for file in files:
@@ -63,7 +63,8 @@ select_rows_sql = """
 
 unique_openings = """
     SELECT DISTINCT opening
-    FROM Openings;
+    FROM Openings
+    ORDER BY opening ASC;
 """
 
 # Queries the pgn for every variation of a given opening
@@ -91,7 +92,28 @@ def get_unique_openings():
     unique_openings_list = [row[0] for row in result]
     return unique_openings_list
 
+def specific_opening(opening):
+    spec_open = """
+    SELECT pgn
+    FROM Openings
+    WHERE opening = %s
+    """
+    return spec_open, (opening,)
+
+def get_specific_opening(opening):
+        query, params = specific_opening(opening)
+        cur.execute(query, params)
+        result = cur.fetchmany(1)
+        return result
+
+
+print(get_specific_opening('Dresden Opening'))
+
+unique = get_unique_openings()
 # Commit the changes and close the cursor and connection
 conn.commit()
-cur.close()
-conn.close()
+
+"""Lader altså bare være med at lukke de her, fordi ellers kan man ikke tilgå databasen fra app.py. 
+Tror det er fint siden vi aldrig skriver noget til databasen"""
+#cur.close()
+#conn.close()
