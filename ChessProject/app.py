@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 import main
 import pgntofen
 import sql 
+import random
+import time
 
 pgnConverter = pgntofen.PgnToFen()
 start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
@@ -16,13 +18,20 @@ def home():
 #Herinde kigger vi på hvad der sker i inputfeltet
 @app.route('/move', methods=['GET','POST'])
 def moving():
-    print(main.currentBoard)
     if request.method == 'POST': 
+        newBoard = pgnConverter.resetBoard()
         move = request.form['move']
         next_move = main.currentBoard
-        next_move = next_move.__add__([move])
-        print(sql.get_check_for_variations(next_move))
         print(next_move)
+        next_move = next_move.__add__([move])
+        move_number = len(next_move)
+        all_responses = sql.get_check_for_variations(next_move)
+        response_long = all_responses[random.randint(0,len(all_responses)-1)]
+        response_long = pgnConverter.pgnToStringList(response_long)
+        response_move = response_long[:move_number+1]
+        main.currentBoard = response_move
+        newBoard = pgnConverter.moves(response_move).getFullFen()
+        main.main(newBoard)
     return render_template('index.html', openings = opning)
         
 
@@ -30,7 +39,6 @@ def moving():
 def pick_opening(): 
     if request.method == 'POST':
         newBoard = pgnConverter.resetBoard()
-        #request.form['move'] er det som er skrevet i inputfeltet
         opening = request.form['selectOpening']
         pgn_of_opening = sql.get_specific_opening(opening)[0][0]
         string_of_moves = pgnConverter.pgnToStringList(pgn_of_opening)

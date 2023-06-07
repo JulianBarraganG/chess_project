@@ -8,6 +8,13 @@ WIN = py.display.set_mode((WIDTH, HEIGHT))
 
 py.display.set_caption("Chess")
 
+#gemmer den seneste liste af træk her. Hvis man gør det inde i app.py bliver den hele tiden reset
+i = 0
+if i == 0:
+   currentBoard = []
+   i = i +1
+
+
 # Test-strings for fen_reader()
 test_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR" #Starting position
 test_fen2 = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR" #Position after 1. e4
@@ -22,13 +29,6 @@ def draw_window(fen):
 
 
 def main(fen):
-   """clock = py.time.Clock()
-   run = True
-   while run:
-       clock.tick(FPS) #sets tickrate to 60
-       for event in py.event.get():
-           if event.type == py.QUIT:
-               run = False"""
    #først bliver vinduet tegnet med den givne fen-string
    draw_window(fen)
    #så tager vi et screenshot af positionen og gemmer det

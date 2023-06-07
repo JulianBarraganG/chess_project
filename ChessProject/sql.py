@@ -117,7 +117,7 @@ def check_for_variations(seq: list):
     # Construct the SQL query with placeholders
     placeholders = ', '.join(['%s'] * len(seq))
     que_vars = f"""
-    SELECT pgn, variation
+    SELECT pgn
     FROM Openings
     WHERE string_notation[:{len(seq)}] = ARRAY[{placeholders}]
     """
@@ -126,9 +126,11 @@ def check_for_variations(seq: list):
 def get_check_for_variations(seq: list):
     cur.execute(check_for_variations(seq), seq)
     result = cur.fetchall()
-    return result
+    unique_openings_list = [row[0] for row in result]
+    return unique_openings_list
 
-print(get_check_for_variations(['e4', 'e5', 'Nf3', 'Nc6', 'c3', 'd6']))
+print(get_check_for_variations(['d4']))
+
 
 
 

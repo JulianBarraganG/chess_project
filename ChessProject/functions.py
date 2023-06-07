@@ -1,5 +1,5 @@
 from chess.pieces import *
-   
+currentBoard = []
 def fen_reader(fen, win):
     row = 0
     col = 0
