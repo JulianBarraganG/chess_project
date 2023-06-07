@@ -128,7 +128,7 @@ def get_check_for_variations(seq: list):
     result = cur.fetchall()
     return result
 
-print(get_check_for_variations(['e4', 'e5', 'Nf3', 'Nc6', 'c3']))
+print(get_check_for_variations(['e4', 'e5', 'Nf3', 'Nc6', 'c3', 'd6']))
 
 
 
