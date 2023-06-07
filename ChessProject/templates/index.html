@@ -5,22 +5,23 @@
 </head>
 <body>
     <h1>Current Position</h1>
-    <form method="POST" action="/">
+    
+    <form method="POST" action="/move">
         <label for="move">Input next move:</label>
         <input type="text" id="move" name="move">
-        <input type="submit" name="move" value="move">
+        <input type="submit" value="Move">
+    </form>
 
-
+    <form method="POST" action="/opening">
         <label for="selectOpening">Select opening to practice:</label>
         <select id="selectOpening" name="selectOpening">
             {% for opening in openings %}
             <option value="{{ opening }}">{{ opening }}</option>
             {% endfor %}
         </select>
-        
-        
-        <input type="submit" name="selectOpening" value="Practice Opening">
+        <input type="submit" value="Practice Opening">
     </form>
+
     <img src="{{ url_for('static', filename='current_position.png') }}" alt="Current Position">
 </body>
 </html>
