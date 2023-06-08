@@ -3,7 +3,7 @@ from psycopg2 import sql
 from pgntofen import *
 
 #TO BE MODIFIED
-YOUR_PASSWORD = 'Stationsvej5'
+YOUR_PASSWORD = 'vxz73ptw'
 YOUR_PORT = '5432'
 
 # Establish a connection to server (that you setup yourself). OBS! Check that port, password etc. are correct.
@@ -28,13 +28,15 @@ create_table_sql = """
     );
 """
 
+
+
 cur.execute(create_table_sql)
 
 # The 5 file names of the tsv-files
 files = ['a','b','c','d','e']
 
 # INSERT HERE -- directory filepath to and with Openings. i.g. below.
-your_path = "C:\\Users\\olink\\OneDrive\\Skrivebord\\Chess_project\\chess_project\\ChessProject\\Openings\\" #remember double backslashes
+your_path = "C:\\Users\\Kaest\\Documents\\KU\\2_Semester\\DIS\\Projekt\\chess_project\\ChessProject\\Openings\\" #remember double backslashes
 
 # Read the TSV file
 for file in files:
@@ -129,10 +131,18 @@ def get_check_for_variations(seq: list):
     unique_openings_list = [row[0] for row in result]
     return unique_openings_list
 
-print(get_check_for_variations(['d4']))
+#print(get_check_for_variations(['d4']))
 
 
+test_ = """
+    SELECT variation, pgn
+    FROM Openings
+    WHERE opening = 'Barnes Opening'
+"""
 
+cur.execute(test_)
+print(cur.fetchall())
+print()
 
 
 unique = get_unique_openings()
