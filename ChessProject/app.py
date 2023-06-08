@@ -15,23 +15,32 @@ opning = sql.unique
 def home(): 
     return render_template('index.html', openings = opning)
 
-#Herinde kigger vi på hvad der sker i inputfeltet
+# Herinde kigger vi på hvad der sker i inputfeltet
 @app.route('/move', methods=['GET','POST'])
 def moving():
     if request.method == 'POST': 
-        newBoard = pgnConverter.resetBoard()
-        move = request.form['move']
-        next_move = main.currentBoard
-        print(next_move)
-        next_move = next_move.__add__([move])
-        move_number = len(next_move)
-        all_responses = sql.get_check_for_variations(next_move)
-        response_long = all_responses[random.randint(0,len(all_responses)-1)]
-        response_long = pgnConverter.pgnToStringList(response_long)
-        response_move = response_long[:move_number+1]
-        main.currentBoard = response_move
-        newBoard = pgnConverter.moves(response_move).getFullFen()
-        main.main(newBoard)
+        try:
+            newBoard = pgnConverter.resetBoard() # Creates initial position??
+            move = request.form['move']
+            next_move = main.currentBoard
+            print(next_move)
+            next_move = next_move.__add__([move])
+            move_number = len(next_move)
+            all_responses = sql.get_check_for_variations(next_move)
+            response_long = all_responses[random.randint(0, len(all_responses) -1)]
+            response_long = pgnConverter.pgnToStringList(response_long)
+            response_move = response_long[:move_number + 1]
+            main.currentBoard = response_move
+            newBoard = pgnConverter.moves(response_move).getFullFen()
+            main.main(newBoard)
+        except:
+            if not main.currentBoard:
+                main.main('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR') # If no moves have been made, reprint initial pos
+            else: # If user failed from a pos, reprint pos
+                retryBoard = main.currentBoard
+                main.main(pgnConverter.moves(retryBoard).getFullFen())
+        return render_template('index.html', openings = opning)
+    
     return render_template('index.html', openings = opning)
         
 

@@ -12,12 +12,7 @@ py.display.set_caption("Chess")
 i = 0
 if i == 0:
    currentBoard = []
-   i = i +1
-
-
-# Test-strings for fen_reader()
-test_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR" #Starting position
-test_fen2 = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR" #Position after 1. e4
+   i = i + 1
 
 
 #Den her funktion tegner vinduet
