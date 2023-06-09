@@ -20,7 +20,11 @@
             {% endfor %}
         </select>
         <input type="submit" value="Practice Opening">
+        <p>{{ in_the_move }} in the move</p>
+
     </form>
+
+    
     
     <img src="{{ url_for('static', filename='current_position.png') }}" alt="Current Position">
 </body>

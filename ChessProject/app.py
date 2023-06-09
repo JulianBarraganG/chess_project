@@ -13,7 +13,7 @@ opning = sql.unique
 
 @app.route('/')
 def home(): 
-    return render_template('index.html', openings = opning)
+    return render_template('index.html', openings = opning, in_the_move = 'White')
 
 # Herinde kigger vi på hvad der sker i inputfeltet
 @app.route('/move', methods=['GET','POST'])
@@ -39,24 +39,30 @@ def moving():
             else: # If user failed from a pos, reprint pos
                 retryBoard = main.currentBoard
                 main.main(pgnConverter.moves(retryBoard).getFullFen())
-        return render_template('index.html', openings = opning)
+        return render_template('index.html', openings = opning, in_the_move = main.in_the_move)
     
-    return render_template('index.html', openings = opning)
+    return render_template('index.html', openings = opning, in_the_move = main.in_the_move)
         
 
 @app.route('/opening', methods=['GET','POST'])
 def pick_opening(): 
     if request.method == 'POST':
         newBoard = pgnConverter.resetBoard()
-        opening = request.form['selectOpening']
+        opening = request.form["selectOpening"]
         
         main.currentBoard : list = sql.get_specific_opening(opening)
         main.variationList : list = sql.listOfVars(opening)
         newBoard: str = pgnConverter.moves(main.currentBoard).getFullFen()
         #her kalder vi den funktion som i sidste ende gør, at brættet bliver vist på skærmen
         main.main(newBoard)
-        return render_template('index.html', openings=opning, selected_opening=opening)
-    return render_template('index.html', openings = opning)
+        print(len(main.currentBoard))
+        print(len(main.currentBoard)%2)
+        if(len(main.currentBoard)%2 == 0): 
+            main.in_the_move = 'White'
+        else: 
+            main.in_the_move = 'Black'
+        return render_template('index.html', openings=opning, selected_opening=opening, in_the_move = main.in_the_move)
+    return render_template('index.html', openings = opning, in_the_move = main.in_the_move)
 
 
 #det her er bare det allerførste der sker når man kører appen

@@ -73,7 +73,7 @@ def opening_vars(open:str):
     que_vars = f"""
     SELECT pgn
     FROM Openings
-    WHERE opening = "{open}"
+    WHERE opening = '{open}'
     """
     return (que_vars)
 
