@@ -24,9 +24,8 @@ create_table_sql = """
     CREATE TABLE Openings (
         pgn VARCHAR PRIMARY KEY,
         opening VARCHAR,
-        variation VARCHAR,
-        string_notation TEXT[]
-    );
+        variation VARCHAR
+);
 """
 
 cur.execute(create_table_sql)
@@ -69,37 +68,52 @@ unique_openings = """
 """
 
 # Queries the pgn for every variation of a given opening
-def opening_vars(open:str):
-    que_vars = f"""
+def opening_vars(opening:str) -> list:
+    """
+    Returns a list of strings, 
+    each containing a pgn string matching the opening with all its variations.
+    """
+    query = """
     SELECT pgn
     FROM Openings
-    WHERE opening = '{open}'
-    """
-    return (que_vars)
+    WHERE opening = %s
+    """ 
+    cur.execute(query, [opening])
+    result = cur.fetchall()
+    return [row[0] for row in result]
 
 #takes as input an opening name, and returns a list of lists, each containting a variation
 def listOfVars(opening_name: str) -> list:
-    cur.execute(opening_vars(opening_name))
-    query = cur.fetchall()
+    """
+    Returns a list of list, 
+    each sub-list is the base opening or a variation of the opening
+    """
+    query = opening_vars(opening_name)
     lst = []
     for i in range(len(query)):
-        lst.append(PgnToFen.pgnToStringList(query[i][0]))
+        lst.append(PgnToFen.pgnToStringList(query[i]))
     return lst
 
 # Query every unique opening as a list of strings
-def get_unique_openings():
+def get_unique_openings() -> list:
+    """
+    Returns all the unique openings w/o the variations
+    """
     cur.execute(unique_openings)
     result = cur.fetchall()
     unique_openings_list = [row[0] for row in result]
     return unique_openings_list
 
 
-def get_specific_opening(opening):
+def get_specific_opening(opening) -> list:
+    """
+    Returns a list containing the pgn of the unique opening (not a variation)
+    """
     lst = listOfVars(opening)
     result = min(lst, key = len)
     return result
 
-
 unique = get_unique_openings()
-# Commit the changes and close the cursor and connection
+
+# Commit the changes
 conn.commit()
