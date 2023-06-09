@@ -9,10 +9,9 @@ WIN = py.display.set_mode((WIDTH, HEIGHT))
 py.display.set_caption("Chess")
 
 #gemmer den seneste liste af træk her. Hvis man gør det inde i app.py bliver den hele tiden reset
-i = 0
-if i == 0:
-   currentBoard = []
-   i = i + 1
+
+currentBoard = []
+variationList = []
 
 
 #Den her funktion tegner vinduet

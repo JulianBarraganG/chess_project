@@ -49,9 +49,10 @@ def pick_opening():
     if request.method == 'POST':
         newBoard = pgnConverter.resetBoard()
         opening = request.form['selectOpening']
-        pgn_list = sql.get_specific_opening(opening)[0][1]
-        main.currentBoard = pgn_list
-        newBoard = pgnConverter.moves(pgn_list).getFullFen()
+        
+        main.currentBoard : list = sql.get_specific_opening(opening)
+        main.variationList : list = sql.listOfVars(opening)
+        newBoard: str = pgnConverter.moves(main.currentBoard).getFullFen()
         #her kalder vi den funktion som i sidste ende gør, at brættet bliver vist på skærmen
         main.main(newBoard)
         return render_template('index.html', openings=opning, selected_opening=opening)
