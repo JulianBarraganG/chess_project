@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>THEORY HAS BEEN COMPLETED</title>
+</head>
+<body>
+    <h1>{{ win_message }} {{win_move}}</h1>
+      
+
+    <form method="POST" action="/opening" accept-charset="UTF-8">
+        <label for="selectOpening">Practice different opening:</label>
+        <select id="selectOpening" name="selectOpening" onchange="this.form.submit()">
+            {% for opening in openings %}
+            <option value="{{ opening }}" {% if opening == selected_opening %}selected{% endif %}>{{ opening }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Practice Opening">
+
+    </form>
+
+    
+    
+    <img src="{{ url_for('static', filename='current_position.png') }}" alt="Current Position">
+</body>
+</html>

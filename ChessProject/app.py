@@ -15,7 +15,7 @@ opning = sql.unique
 
 @app.route('/')
 def home(): 
-    return render_template('index.html', openings = opning, in_the_move = 'White')
+    return render_template('login.html', openings = opning, in_the_move = 'White')
 
 
 ### OPRET PAGE BETWEEN LOGIN AND PRACTICE
@@ -23,7 +23,7 @@ def home():
 
 @app.route('/main')
 def choose_opening():
-    return render_template('index.html', openings = opning, in_the_move = 'White')
+    return render_template('landingpage.html', openings = opning)
 
 
 # Login til at lave en bruger. (der er brug for flere entities)
@@ -85,12 +85,17 @@ def moving():
         if tempVarList:
             if main.currentBoard == max(tempVarList, key=len):
                 pgnConverter.resetBoard() # resets the board, before applying move function
-                main.main(pgnConverter.moves(main.currentBoard).getFullFen()) # Print the pos after user finishes theory.
+                main.main(pgnConverter.moves(main.currentBoard).getFullFen())
+                 # Print the pos after user finishes theory.
                 print("good job, you finished theory")
+                return render_template('victory.html', openings = opning, in_the_move = main.in_the_move, win_message = 'You just played the last theory move, ', win_move = main.currentBoard[i-1])
             else:
                 main.currentBoard = random.choice(tempVarList)[:i+1] # pick a random response (NPC move)
                 if main.currentBoard == max(tempVarList):
                     print("good job, oppenent finished theory")
+                    pgnConverter.resetBoard()
+                    main.main(pgnConverter.moves(main.currentBoard).getFullFen())
+                    return render_template('victory.html', openings = opning, in_the_move = main.in_the_move, win_message = 'Opponent played the last theory move, ', win_move = main.currentBoard[i])
                 pgnConverter.resetBoard() # resets the board, before applying move function
                 main.variationList : list = tempVarList
                 main.main(pgnConverter.moves(main.currentBoard).getFullFen()) # Print the pos after oppenent moves or theory is finished
