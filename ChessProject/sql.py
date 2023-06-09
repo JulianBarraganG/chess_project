@@ -76,9 +76,10 @@ def opening_vars(opening:str) -> list:
     query = """
     SELECT pgn
     FROM Openings
-    WHERE opening = %s
+    WHERE opening = %s OR opening LIKE %s  
     """ 
-    cur.execute(query, [opening])
+    opening_pattern = opening + "%"
+    cur.execute(query, [opening, opening_pattern])
     result = cur.fetchall()
     return [row[0] for row in result]
 
