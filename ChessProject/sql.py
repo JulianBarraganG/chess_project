@@ -20,7 +20,7 @@ cur = conn.cursor()
 
 # Table for opening database
 create_table_sql = """
-    DROP TABLE IF EXISTS Openings;
+    DROP TABLE IF EXISTS Openings CASCADE;
     CREATE TABLE Openings (
         pgn VARCHAR PRIMARY KEY,
         opening VARCHAR,

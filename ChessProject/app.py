@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
+import psycopg2
 import main
 import pgntofen
 import sql 
+import sql_logins
 import random
 import time
 
@@ -13,7 +15,66 @@ opning = sql.unique
 
 @app.route('/')
 def home(): 
+    return render_template('login.html')
+
+
+### OPRET PAGE BETWEEN LOGIN AND PRACTICE
+
+
+@app.route('/main')
+def choose_opening():
     return render_template('index.html', openings = opning, in_the_move = 'White')
+
+
+# Login til at lave en bruger. (der er brug for flere entities)
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Check if the username and password exist in the database
+        sql_logins.cur.execute("SELECT * \
+                     FROM Users \
+                     WHERE username = %s AND password = %s;", 
+                     (username, password))
+        user = sql_logins.cur.fetchone()
+
+        if user:
+            # Successful login
+            print(user, 'sdhfisfjdosjfiodsjfdsuihfs')
+            return redirect('/main')
+        else:
+            # Invalid credentials
+            return "Invalid username or password!"
+
+    # Render the login form
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Check if the username already exists in the database
+        sql_logins.cur.execute("SELECT * FROM Users WHERE username = %s;", (username,))
+        existing_user = sql_logins.cur.fetchone()
+
+        if existing_user:
+            # Username already exists
+            return "Username already exists. Please choose a different username."
+
+        # Create a new user
+        sql_logins.cur.execute("INSERT INTO Users (username, password) VALUES (%s, %s);", (username, password))
+        sql_logins.conn.commit()
+
+        # Redirect to the login page after successful registration
+        return redirect('/login')
+
+    # Render the registration form
+    return render_template('register.html')
+
 
 # Herinde kigger vi på hvad der sker i inputfeltet
 @app.route('/move', methods=['GET','POST'])
