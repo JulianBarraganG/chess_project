@@ -18,6 +18,7 @@ conn = psycopg2.connect(
 # Create a cursor object
 cur = conn.cursor()
 
+# Table for opening database
 create_table_sql = """
     DROP TABLE IF EXISTS Openings;
     CREATE TABLE Openings (
@@ -135,8 +136,3 @@ def get_check_for_variations(seq: list):
 unique = get_unique_openings()
 # Commit the changes and close the cursor and connection
 conn.commit()
-
-"""Lader altså bare være med at lukke de her, fordi ellers kan man ikke tilgå databasen fra app.py. 
-Tror det er fint siden vi aldrig skriver noget til databasen"""
-#cur.close()
-#conn.close()
