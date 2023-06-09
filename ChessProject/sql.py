@@ -3,8 +3,8 @@ from psycopg2 import sql
 from pgntofen import *
 
 #TO BE MODIFIED
-YOUR_PASSWORD = 'Stationsvej5'
-YOUR_PORT = '5432'
+YOUR_PASSWORD = 'rotterne'
+YOUR_PORT = '3849'
 
 # Establish a connection to server (that you setup yourself). OBS! Check that port, password etc. are correct.
 conn = psycopg2.connect(
@@ -35,7 +35,7 @@ cur.execute(create_table_sql)
 files = ['a','b','c','d','e']
 
 # INSERT HERE -- directory filepath to and with Openings. i.g. below.
-your_path = "C:\\Users\\olink\OneDrive\\Skrivebord\\Chess_project\\chess_project\\ChessProject\\Openings\\" #remember double backslashes
+your_path = "C:\\Users\\hulig\\OneDrive - University of Copenhagen\\ML\\DIS\\ChessProject\\Openings\\" #remember double backslashes
 
 # Read the TSV file
 for file in files:
@@ -73,7 +73,7 @@ def opening_vars(open:str):
     que_vars = f"""
     SELECT pgn
     FROM Openings
-    WHERE opening = "{open}"
+    WHERE opening = '{open}'
     """
     return (que_vars)
 
