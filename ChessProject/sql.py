@@ -15,11 +15,11 @@ conn = psycopg2.connect(
     port= YOUR_PORT
 )
 
-# Create a cursor object
+# Create a cursor
 cur = conn.cursor()
 
 # Table for opening database
-create_table_sql = """
+opening_table = """
     DROP TABLE IF EXISTS Openings CASCADE;
     CREATE TABLE Openings (
         pgn VARCHAR PRIMARY KEY,
@@ -27,8 +27,6 @@ create_table_sql = """
         variation VARCHAR
 );
 """
-
-cur.execute(create_table_sql)
 
 # The 5 file names of the tsv-files
 files = ['a','b','c','d','e']
@@ -52,20 +50,12 @@ for file in files:
             """
 
             # Execute the SQL statement with the data
+            cur.execute(opening_table)
             cur.execute(insert_row_sql, (pgn, opening, variation))
+            
 
 
-# Fetch all rows from the result set
-select_rows_sql = """
-    SELECT *
-    FROM Openings;
-"""
 
-unique_openings = """
-    SELECT DISTINCT opening
-    FROM Openings
-    ORDER BY opening ASC;
-"""
 
 # Queries the pgn for every variation of a given opening
 def opening_vars(opening:str) -> list:
@@ -95,6 +85,11 @@ def listOfVars(opening_name: str) -> list:
         lst.append(PgnToFen.pgnToStringList(query[i]))
     return lst
 
+unique_openings = """
+    SELECT DISTINCT opening
+    FROM Openings
+    ORDER BY opening ASC;
+"""
 # Query every unique opening as a list of strings
 def get_unique_openings() -> list:
     """
