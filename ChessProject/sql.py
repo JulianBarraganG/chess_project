@@ -1,5 +1,6 @@
 import psycopg2
 from pgntofen import *
+import os
 
 #TO BE MODIFIED
 YOUR_PASSWORD = 'rotterne'
@@ -33,12 +34,12 @@ cur.execute(opening_table)
 # The 5 file names of the tsv-files
 files = ['a','b','c','d','e']
 
-# INSERT HERE -- directory filepath to and with Openings. i.g. below.
-your_path = "C:\\Users\\hulig\\OneDrive - University of Copenhagen\\ML\\DIS\\ChessProject\\Openings\\" #remember double backslashes
+# OS gets current working directory.
+file_path = os.getcwd()+"\\Openings\\"
 
 # Read the TSV file
 for file in files:
-    with open(your_path+f"{file}.tsv", 'r') as f:
+    with open(file_path+f"{file}.tsv", 'r') as f:
         next(f)  # Skip the header line1    
         for line in f:
             data = line.strip().split('\t')
