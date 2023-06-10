@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Current Position</title>
+    <title>Opening Trainer</title>
 </head>
 <body>
-    <h1>Current Position</h1>
+    <h1>Practice {{ selected_opening }} Theory</h1>
       
     <form method="POST" action="/move">  
         <label for="move">Input next move:</label>
@@ -20,7 +20,7 @@
             {% endfor %}
         </select>
         <input type="submit" value="Practice Opening">
-        <p>{{ in_the_move }} in the move</p>
+        <p>{{ in_the_move }} to move</p>
 
     </form>
 

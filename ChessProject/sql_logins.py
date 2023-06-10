@@ -1,9 +1,8 @@
-import psycopg2
 import sql
 
 cur = sql.conn.cursor()
 
-create_log_table = """
+create_users_table = """
     DROP TABLE IF EXISTS Users CASCADE;
     CREATE TABLE Users (
         id SERIAL PRIMARY KEY,
@@ -11,6 +10,28 @@ create_log_table = """
         password VARCHAR
     );
     """
+def create_users_table():
+    """
+    This function creates the users table, if it doesn't already exist in the database.
+    This ensures that the database keeps all the users in the table.
+    """
+    # Establish connection
+    cur = sql.conn.cursor()
+
+    # Check if the table exists
+    cur.execute("SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name = 'users');")
+    table_exists = cur.fetchone()[0]
+    print(table_exists)
+
+    if not table_exists:
+        print("Creating table from scratch")
+        # Create the table if it doesn't exist
+        cur.execute(create_users_table)
+        sql.conn.commit()
+    else:
+        print("We already have this table")
+    cur.close()
+
 
 # er vel en many-to-many... en user kan have mange favorite openings, 
 # og openings kan være favorite af mange users.
@@ -48,7 +69,5 @@ def InsertOpenFavOpen(user:int,pgn:str):
     return insert_query
 
 
-cur.execute(create_log_table)
-cur.execute(create_fav_open_relation)
+#cur.execute(create_fav_open_relation)
 sql.conn.commit()
-

@@ -1,5 +1,4 @@
 import psycopg2
-from psycopg2 import sql
 from pgntofen import *
 
 #TO BE MODIFIED
@@ -28,6 +27,9 @@ opening_table = """
 );
 """
 
+cur.execute(opening_table)
+
+
 # The 5 file names of the tsv-files
 files = ['a','b','c','d','e']
 
@@ -50,7 +52,6 @@ for file in files:
             """
 
             # Execute the SQL statement with the data
-            cur.execute(opening_table)
             cur.execute(insert_row_sql, (pgn, opening, variation))
             
 
@@ -59,6 +60,7 @@ for file in files:
 
 # Queries the pgn for every variation of a given opening
 def opening_vars(opening:str) -> list:
+    cur = conn.cursor()
     """
     Returns a list of strings, 
     each containing a pgn string matching the opening with all its variations.
@@ -71,10 +73,12 @@ def opening_vars(opening:str) -> list:
     opening_pattern = opening + "%"
     cur.execute(query, [opening, opening_pattern])
     result = cur.fetchall()
+    cur.close()
     return [row[0] for row in result]
 
 #takes as input an opening name, and returns a list of lists, each containting a variation
 def listOfVars(opening_name: str) -> list:
+    cur = conn.cursor()
     """
     Returns a list of list, 
     each sub-list is the base opening or a variation of the opening
@@ -83,6 +87,7 @@ def listOfVars(opening_name: str) -> list:
     lst = []
     for i in range(len(query)):
         lst.append(PgnToFen.pgnToStringList(query[i]))
+    cur.close()
     return lst
 
 unique_openings = """
@@ -92,21 +97,25 @@ unique_openings = """
 """
 # Query every unique opening as a list of strings
 def get_unique_openings() -> list:
+    cur = conn.cursor()
     """
     Returns all the unique openings w/o the variations
     """
     cur.execute(unique_openings)
     result = cur.fetchall()
     unique_openings_list = [row[0] for row in result]
+    cur.close()
     return unique_openings_list
 
 
 def get_specific_opening(opening) -> list:
+    cur = conn.cursor()
     """
     Returns a list containing the pgn of the unique opening (not a variation)
     """
     lst = listOfVars(opening)
     result = min(lst, key = len)
+    cur.close()
     return result
 
 unique = get_unique_openings()

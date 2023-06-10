@@ -1,11 +1,9 @@
 from flask import Flask, render_template, request, redirect
-import psycopg2
 import main
 import pgntofen
 import sql 
 import sql_logins
 import random
-import time
 
 pgnConverter = pgntofen.PgnToFen()
 start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
@@ -16,9 +14,6 @@ opning = sql.unique
 @app.route('/')
 def home(): 
     return render_template('login.html', openings = opning, in_the_move = 'White')
-
-
-### OPRET PAGE BETWEEN LOGIN AND PRACTICE
 
 
 @app.route('/main')
@@ -33,16 +28,19 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
+        #Establish connection
+        cur = sql.conn.cursor()
+
         # Check if the username and password exist in the database
-        sql_logins.cur.execute("SELECT * \
+        cur.execute("SELECT * \
                      FROM Users \
                      WHERE username = %s AND password = %s;", 
                      (username, password))
-        user = sql_logins.cur.fetchone()
+        user = cur.fetchall()
+        cur.close()
 
         if user:
             # Successful login
-            print(user, 'sdhfisfjdosjfiodsjfdsuihfs')
             return redirect('/main')
         else:
             # Invalid credentials
@@ -56,18 +54,23 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
+    
+        #Establish connection
+        cur = sql.conn.cursor()
         # Check if the username already exists in the database
-        sql_logins.cur.execute("SELECT * FROM Users WHERE username = %s;", (username,))
-        existing_user = sql_logins.cur.fetchone()
+        cur.execute("SELECT * FROM Users WHERE username = %s;", (username,))
+        existing_user = cur.fetchone()
+
 
         if existing_user:
             # Username already exists
             return "Username already exists. Please choose a different username."
 
         # Create a new user
-        sql_logins.cur.execute("INSERT INTO Users (username, password) VALUES (%s, %s);", (username, password))
-        sql_logins.conn.commit()
+        sql_logins.create_users_table()
+        cur.execute("INSERT INTO Users (username, password) VALUES (%s, %s);", (username, password))
+        sql.conn.commit()
+        cur.close()
 
         # Redirect to the login page after successful registration
         return redirect('/login')
@@ -117,8 +120,6 @@ def pick_opening():
         newBoard: str = pgnConverter.moves(main.currentBoard).getFullFen()
         #her kalder vi den funktion som i sidste ende gør, at brættet bliver vist på skærmen
         main.main(newBoard)
-        print(len(main.currentBoard))
-        print(len(main.currentBoard) % 2)
         if(len(main.currentBoard) % 2 == 0): 
             main.in_the_move = 'White'
         else: 
@@ -133,11 +134,3 @@ if __name__ == '__main__':
     main.main(start_fen)
     
     app.run()
-
-def debug():
-        i = len(main.currentBoard) + 1
-        main.currentBoard.append([request.form['move']])
-        main.variationList = filter(lambda x: x[:i] == main.currentBoard, main.variationList)
-        print("current:", main.currentBoard)
-        print("varlist:", main.variationList)
-        pass
