@@ -7,6 +7,8 @@ The app allows you to pick an opening you wish to train, and lets you train your
   If you make an invalid or illegal move, no moves will be projected on the board, and you're supposed to try again.
   You can register and save your favorite openings for later training.
   
+  It is possible, on the 'Profile' page, to change your password and to delete openings from your list of personal favourites. 
+  
 # Chess notation
 The app is also a great way to test your chess notation, since moves can only be played by manually entering the move in conventional pgn notation.
 This is the serious way to train opening theory, since associating the moves with the PGN notation, reinforces the memorisation of the opening.
@@ -31,6 +33,6 @@ os
 Make sure to create a postgres database server, using you preffered method or client. We use pgAdmin4 ourselves. To connect to the server, go to the sql.py file, and modify password, name, port etc. The code is commented to help identify what needs to be changed, and the modifications should be made at the top.
 
 # Running the app
-Once you've set up your server, you can verify (i.e. with client) that the opening database is created in your schemas, after running either sql.py or app.py.
+Once you've set up your server, you can verify (i.e. with client) that the opening database is created in your schemas, after running either sql_logins.py or app.py.
   To run app.py navigate toe the ChessProject folder in your terminal, and write python app.py (you might want to create a venv and download any missing modules. i.e. pip install pygame) and then follow the local link to open the webapp in your favorite browser.
  
