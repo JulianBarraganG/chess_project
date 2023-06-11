@@ -138,15 +138,23 @@ def pick_opening():
 def add_to_favorites():
     #åbner en cursor og henter pgn til den nuværende åbning
     cur = sql.conn.cursor()
-    cur.execute(f"SELECT pgn \
-                  FROM Openings \
-                  WHERE opening = '{main.current_opening}' ",)
+    query = """
+    SELECT pgn
+    FROM Openings
+    WHERE opening = %s"""
+    cur.execute(query,[main.current_opening])
     pgn = cur.fetchone()[0]
-    
+    print(pgn)
+    print(main.current_opening)
+    print(main.current_user)
     # getting pgn
     try:
     # Insert the opening into the Fav_Open table  
-        cur.execute(f"INSERT INTO Fav_Open (opening_pgn, opening_name, userID) VALUES ('{pgn}','{main.current_opening}',{main.current_user})") 
+        query = """ 
+        INSERT INTO Fav_open (opening_pgn, opening_name, userID)
+        VALUES (%s, %s, %s)
+        """
+        cur.execute(query,[pgn, main.current_opening, main.current_user])
     except: 
         #except i tilfælde af at det er en duplicate
         print("Already in this users favourite openings")
@@ -193,7 +201,7 @@ def remove_from_fave():
 def go_to_landing(): 
     return render_template('landingpage.html' , openings = opning, fave_openings = sql_logins.get_dropdown_list(main.current_user))
 
-@app.route('/to_profile', methods = ['POST'])
+@app.route('/go_to_profile', methods = ['POST'])
 def go_to_profile():
     return render_template('profile.html', fave_openings = sql_logins.get_dropdown_list(main.current_user))
 
