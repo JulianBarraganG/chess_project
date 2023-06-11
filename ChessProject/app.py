@@ -205,6 +205,30 @@ def go_to_landing():
 def go_to_profile():
     return render_template('profile.html', fave_openings = sql_logins.get_dropdown_list(main.current_user))
 
+@app.route("/change_password", methods=["GET", "POST"])
+def change_password():
+    if request.method == "POST":
+        # Get form data
+        userID = main.current_user
+        new_password = request.form.get("new_password")
+
+        # Update the password in the database
+        try:
+            cur = sql.conn.cursor()
+
+            # Execute the SQL query to update the password
+            update_query = "UPDATE users SET password = %s WHERE id = %s"
+            cur.execute(update_query, (new_password, userID))
+
+            # Commit the transaction and close the cursor and connection
+
+        except:
+            return f"Error occurred while updating password: "
+    
+    sql.conn.commit()
+    cur.close()
+    return render_template('profile.html', fave_openings = sql_logins.get_dropdown_list(main.current_user))
+
 #det her er bare det allerførste der sker når man kører appen
 if __name__ == '__main__':
     #brættet bliver sat til at vise startpositionen i udgangspunktet
