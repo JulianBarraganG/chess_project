@@ -15,7 +15,7 @@ opning = sql.unique
 def home(): 
     return render_template('login.html', openings = opning, in_the_move = 'White')
 
-
+ 
 @app.route('/main')
 def choose_opening():
     return render_template('landingpage.html', openings = opning, fave_openings = sql_logins.get_dropdown_list(main.current_user))
