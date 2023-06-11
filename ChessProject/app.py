@@ -127,6 +127,32 @@ def pick_opening():
         return render_template('index.html', openings=opning, selected_opening=opening, in_the_move = main.in_the_move)
     return render_template('index.html', openings = opning, in_the_move = main.in_the_move)
 
+@app.route('/favorite', methods=['POST'])
+def add_to_favorites():
+    if 'opening_id' in request.form:
+        opening_name = request.form['opening_id']
+
+        # getting pgn
+        cur = sql.conn.cursor()
+        cur.execute(f"SELECT pgn \
+                      FROM Openings \
+                      WHERE opening = '{opening_name}' ",)
+        pgn = cur.fetchone()[0]
+        
+        # Insert the opening into the Fav_Open table (example code)
+        # current user global variable from login route.
+        cur.execute(f"INSERT INTO Fav_Open (opening_pgn, opening_name, userID) VALUES ('{pgn}','{opening_name}',{current_user})") 
+        sql.conn.commit()
+
+        # debug
+        cur.execute("SELECT * FROM Fav_Open")
+        #print(cur.fetchall())
+        cur.close()
+
+        return render_template('index.html', openings = opning)
+    else:
+        return render_template('index.html', openings = opning)
+
 
 #det her er bare det allerførste der sker når man kører appen
 if __name__ == '__main__':
