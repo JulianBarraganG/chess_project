@@ -138,15 +138,21 @@ def pick_opening():
 def add_to_favorites():
     #åbner en cursor og henter pgn til den nuværende åbning
     cur = sql.conn.cursor()
-    cur.execute(f"SELECT pgn \
-                  FROM Openings \
-                  WHERE opening = '{main.current_opening}' ",)
+    query = """
+    SELECT pgn 
+    FROM Openings 
+    WHERE opening = %s
+    """
+    cur.execute(query, [main.current_opening])
     pgn = cur.fetchone()[0]
     
     # getting pgn
     try:
     # Insert the opening into the Fav_Open table  
-        cur.execute(f"INSERT INTO Fav_Open (opening_pgn, opening_name, userID) VALUES ('{pgn}','{main.current_opening}',{main.current_user})") 
+        query = """
+        INSERT INTO Fav_Open (opening_pgn, opening_name, userID) VALUES (%s,%s,%s)
+        """
+        cur.execute(query, [pgn, main.current_opening, main.current_user]) 
     except: 
         #except i tilfælde af at det er en duplicate
         print("Already in this users favourite openings")
