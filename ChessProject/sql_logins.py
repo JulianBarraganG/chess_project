@@ -2,7 +2,7 @@ import sql
 
 cur = sql.conn.cursor()
 
-create_users_table = """
+query_users_table = """
     DROP TABLE IF EXISTS Users CASCADE;
     CREATE TABLE Users (
         id SERIAL PRIMARY KEY,
@@ -26,7 +26,7 @@ def create_users_table():
     if not table_exists:
         print("Creating table from scratch")
         # Create the table if it doesn't exist
-        cur.execute(create_users_table)
+        cur.execute(query_users_table)
         sql.conn.commit()
     else:
         print("We already have this table")
@@ -89,8 +89,8 @@ def get_dropdown_list (userID):
     cur.close()
     return fave_opening_list
 
-print(get_dropdown_list (2))
 
+create_users_table()
 create_fave_openings_table()
 #cur.execute(create_fav_open_relation)
 sql.conn.commit()
