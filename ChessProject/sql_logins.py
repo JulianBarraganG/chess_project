@@ -21,7 +21,6 @@ def create_users_table():
     # Check if the table exists
     cur.execute("SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name = 'users');")
     table_exists = cur.fetchone()[0]
-    print(table_exists)
 
     if not table_exists:
         print("Creating table from scratch")
@@ -65,7 +64,6 @@ def create_fave_openings_table():
     # Check if the table exists
     cur.execute("SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name = 'fav_open');")
     table_exists = cur.fetchone()[0]
-    print(table_exists)
 
     if not table_exists:
         print("Creating table from scratch")
@@ -88,8 +86,6 @@ def get_dropdown_list (userID):
     fave_opening_list = [row[0] for row in openings]
     cur.close()
     return fave_opening_list
-
-print(get_dropdown_list (2))
 
 create_fave_openings_table()
 #cur.execute(create_fav_open_relation)

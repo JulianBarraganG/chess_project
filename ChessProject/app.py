@@ -144,9 +144,6 @@ def add_to_favorites():
     WHERE opening = %s"""
     cur.execute(query,[main.current_opening])
     pgn = cur.fetchone()[0]
-    print(pgn)
-    print(main.current_opening)
-    print(main.current_user)
     # getting pgn
     try:
     # Insert the opening into the Fav_Open table  
@@ -183,7 +180,6 @@ def choose_favourties():
 def remove_from_fave():
     cur = sql.conn.cursor()
     opening = request.form["remove_fave"]
-    print(opening)
     
     query = """
     DELETE FROM Fav_Open
@@ -193,7 +189,7 @@ def remove_from_fave():
     
     sql.conn.commit()
     cur.close()
-    print(sql_logins.get_dropdown_list(main.current_user))
+
     return render_template('profile.html', fave_openings = sql_logins.get_dropdown_list(main.current_user))
 
 
