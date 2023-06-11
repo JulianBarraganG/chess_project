@@ -70,7 +70,6 @@ def login():
 @app.route('/logout', methods=['POST'])
 def logout():
     # Clear the session
-    session.clear()
     return "Logged out successfully!"
 
 @app.route('/register', methods=['GET', 'POST'])
