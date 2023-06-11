@@ -76,25 +76,20 @@ def create_fave_openings_table():
         print("We already have this table")
     cur.close()
 
-#intentionen er at lave en funktion der vil indsætte fav opening,
-# med alle kolloner udfyldt.
-def InsertOpenFavOpen(user:int,pgn:str):
-    #get name for the insert  
-    get_name_query = f"""
-    SELECT DISTINCT opening
-    FROM Openings
-    WHERE pgn = '{pgn}'
+def get_dropdown_list (userID):
+    cur = sql.conn.cursor()
+    dropdown_query = f"""
+        SELECT opening_name
+        FROM Fav_Open
+        WHERE userID = {userID}
     """
-    
-    cur.execute(get_name_query)
-    name = cur.fetchone()[0]
-    
-    # sql query:
-    insert_query = f"""
-    INSERT INTO Fav_Open (userID, opening_pgn, opening_name) VALUES ({user}, '{pgn}', '{name}')
-    """
-    
-    return insert_query
+    cur.execute(dropdown_query)
+    openings = cur.fetchall()
+    fave_opening_list = [row[0] for row in openings]
+    cur.close()
+    return fave_opening_list
+
+print(get_dropdown_list (2))
 
 create_fave_openings_table()
 #cur.execute(create_fav_open_relation)

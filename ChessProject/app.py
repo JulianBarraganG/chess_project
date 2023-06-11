@@ -18,7 +18,7 @@ def home():
 
 @app.route('/main')
 def choose_opening():
-    return render_template('landingpage.html', openings = opning)
+    return render_template('landingpage.html', openings = opning, fave_openings = sql_logins.get_dropdown_list(main.current_user))
 
 
 # Login til at lave en bruger. (der er brug for flere entities)
@@ -98,14 +98,14 @@ def moving():
                 main.main(pgnConverter.moves(main.currentBoard).getFullFen())
                  # Print the pos after user finishes theory.
                 print("good job, you finished theory")
-                return render_template('victory.html', openings = opning, in_the_move = main.in_the_move, win_message = 'You just played the last theory move, ', win_move = main.currentBoard[i-1])
+                return render_template('victory.html', openings = opning, in_the_move = main.in_the_move, win_message = 'You just played the last theory move, ', win_move = main.currentBoard[i-1], fave_openings = sql_logins.get_dropdown_list(main.current_user))
             else:
                 main.currentBoard = random.choice(tempVarList)[:i+1] # pick a random response (NPC move)
                 if main.currentBoard == max(tempVarList):
                     print("good job, oppenent finished theory")
                     pgnConverter.resetBoard()
                     main.main(pgnConverter.moves(main.currentBoard).getFullFen())
-                    return render_template('victory.html', openings = opning, in_the_move = main.in_the_move, win_message = 'Opponent played the last theory move, ', win_move = main.currentBoard[i])
+                    return render_template('victory.html', openings = opning, in_the_move = main.in_the_move, win_message = 'Opponent played the last theory move, ', win_move = main.currentBoard[i], fave_openings = sql_logins.get_dropdown_list(main.current_user))
                 pgnConverter.resetBoard() # resets the board, before applying move function
                 main.variationList : list = tempVarList
                 main.main(pgnConverter.moves(main.currentBoard).getFullFen()) # Print the pos after oppenent moves or theory is finished
@@ -114,7 +114,7 @@ def moving():
             main.currentBoard : list = main.currentBoard[:i-1]
             pgnConverter.resetBoard()
             main.main(pgnConverter.moves(main.currentBoard).getFullFen()) # Print the pos after wrong input
-    return render_template('index.html', openings = opning, in_the_move = main.in_the_move, selected_opening = main.current_opening)        
+    return render_template('index.html', openings = opning, in_the_move = main.in_the_move, selected_opening = main.current_opening, fave_openings = sql_logins.get_dropdown_list(main.current_user))        
 
 @app.route('/opening', methods=['GET','POST'])
 def pick_opening(): 
@@ -131,8 +131,8 @@ def pick_opening():
             main.in_the_move = 'White'
         else: 
             main.in_the_move = 'Black'
-        return render_template('index.html', openings=opning, selected_opening=opening, in_the_move = main.in_the_move)
-    return render_template('index.html', openings = opning, in_the_move = main.in_the_move)
+        return render_template('index.html', openings=opning, selected_opening=opening, in_the_move = main.in_the_move, fave_openings = sql_logins.get_dropdown_list(main.current_user))
+    return render_template('index.html', openings = opning, in_the_move = main.in_the_move, fave_openings = sql_logins.get_dropdown_list(main.current_user))
 
 @app.route('/favorite', methods=['POST'])
 def add_to_favorites():
@@ -154,8 +154,22 @@ def add_to_favorites():
     cur.close()
 
 
-    return render_template('index.html', openings = opning, in_the_move = main.in_the_move, selected_opening = main.current_opening)
+    return render_template('index.html', openings = opning, in_the_move = main.in_the_move, selected_opening = main.current_opening, fave_openings = sql_logins.get_dropdown_list(main.current_user))
 
+
+@app.route('/fave_openings',methods=['POST'])
+def choose_favourties():
+    if request.method == 'POST':
+        newBoard = pgnConverter.resetBoard()
+        opening = request.form["selectOpening"]
+        main.current_opening = opening
+        main.currentBoard : list = sql.get_specific_opening(opening)
+        main.variationList : list = sql.listOfVars(opening)
+        newBoard: str = pgnConverter.moves(main.currentBoard).getFullFen()
+        #her kalder vi den funktion som i sidste ende gør, at brættet bliver vist på skærmen
+        main.main(newBoard)
+        return render_template('index.html', openings=opning, selected_opening=opening, in_the_move = main.in_the_move, fave_openings = sql_logins.get_dropdown_list(main.current_user))
+    return render_template('index.html', openings = opning, in_the_move = main.in_the_move, fave_openings = sql_logins.get_dropdown_list(main.current_user))
 
 #det her er bare det allerførste der sker når man kører appen
 if __name__ == '__main__':
