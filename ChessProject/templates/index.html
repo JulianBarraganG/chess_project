@@ -6,12 +6,7 @@
 <body>
     <h1>Practice {{ selected_opening }} Theory</h1>
       
-    <form method="POST" action="/move">  
-        <label for="move">Input next move:</label>
-        <input type="text" id="move" name="move">
-        <input type="submit" value="Move">
-    </form>
-
+    
     <form method="POST" action="/opening" accept-charset="UTF-8">
         <label for="selectOpening">Select opening to practice:</label>
         <select id="selectOpening" name="selectOpening" onchange="this.form.submit()">
@@ -21,12 +16,12 @@
         </select>
         <input type="submit" value="Practice Opening">
         
-
+        
     </form>
-
-
-
-
+    
+    
+    
+    
     <form method="POST" action="/opening" accept-charset="UTF-8">
         <label for="selectOpening">Select faveorite opening to practice:</label>
         <select id="selectOpening" name="selectOpening" onchange="this.form.submit()">
@@ -35,13 +30,18 @@
             {% endfor %}
         </select>
         <input type="submit" value="Practice Opening">
-        <p>{{ in_the_move }} to move</p>
-    </form>
-
-    <form method = "POST" action = "/favorite">
-        <input type="submit" value="Add to favorites"> 
     </form>
     
+    <form method = "POST" action = "/favorite">
+        <input type="submit" value="Add to favorites"> 
+        <p>{{ in_the_move }} to move</p>
+    </form>
+    
+    <form method="POST" action="/move">  
+        <label for="move">Input next move:</label>
+        <input type="text" id="move" name="move">
+        <input type="submit" value="Move">
+    </form>
     
     <img src="{{ url_for('static', filename='current_position.png') }}" alt="Current Position">
 </body>
