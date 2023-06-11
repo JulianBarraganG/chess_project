@@ -12,6 +12,7 @@
         <input type="submit" value="Move">
     </form>
 
+    <h2>Openings</h2>
     <form method="POST" action="/opening">
         <label for="selectOpening">Select opening to practice:</label>
         <select id="selectOpening" name="selectOpening">
@@ -20,6 +21,16 @@
             {% endfor %}
         </select>
         <input type="submit" value="Practice Opening">
+    </form>
+
+    <form method="POST" action="/favorite">
+        <label for="selectOpening">Select opening to add to favorites:</label>
+        <select id="selectOpening" name="opening_id">
+            {% for opening in openings %}
+            <option value="{{ opening }}">{{ opening }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add to Favorites</button>
     </form>
 
     <img src="{{ url_for('static', filename='current_position.png') }}" alt="Current Position">

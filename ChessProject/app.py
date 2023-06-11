@@ -67,11 +67,6 @@ def login():
     # Render the login form
     return render_template('login.html')
 
-@app.route('/logout', methods=['POST'])
-def logout():
-    # Clear the session
-    return "Logged out successfully!"
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
