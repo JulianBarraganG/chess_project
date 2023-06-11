@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile page</title>
+</head>
+<body>
+    <h1>Your profile page</h1>
+      
+    
+    <form method="POST" action="/remove_fave" accept-charset="UTF-8">
+        <label for="remove_fave">Remove opening from favorites:</label>
+        <select id="remove_fave" name="remove_fave" onchange="this.form.submit()">
+            {% for opening in fave_openings %}
+            <option value="{{ opening }}" {% if opening == selected_opening %}selected{% endif %}>{{ opening }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Remove Opening">  
+    </form>
+
+    <form method = "POST" action = "/go_to_landing">
+        <input type="submit" value="Back"> 
+    </form>
+
+</body>
+</html>

@@ -28,9 +28,17 @@
         <input type="submit" value="Practice Opening">
         
     </form>
+    <form method = "POST" action = "/favorite">
+        <input type="submit" value="Add to favorites"> 
+        
+    </form>
 
     
     
     <img src="{{ url_for('static', filename='current_position.png') }}" alt="Current Position">
+
+    <form method = "POST" action = "/go_to_profile">
+        <input type="submit" value="Profile"> 
+    </form>
 </body>
 </html>

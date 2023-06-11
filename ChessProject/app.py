@@ -171,6 +171,32 @@ def choose_favourties():
         return render_template('index.html', openings=opning, selected_opening=opening, in_the_move = main.in_the_move, fave_openings = sql_logins.get_dropdown_list(main.current_user))
     return render_template('index.html', openings = opning, in_the_move = main.in_the_move, fave_openings = sql_logins.get_dropdown_list(main.current_user))
 
+@app.route('/remove_fave', methods = ['POST'])
+def remove_from_fave():
+    cur = sql.conn.cursor()
+    opening = request.form["remove_fave"]
+    print(opening)
+    
+    query = """
+    DELETE FROM Fav_Open
+    WHERE userID = %s AND opening_name = %s
+    """
+    cur.execute(query,[main.current_user, opening])
+    
+    sql.conn.commit()
+    cur.close()
+    print(sql_logins.get_dropdown_list(main.current_user))
+    return render_template('profile.html', fave_openings = sql_logins.get_dropdown_list(main.current_user))
+
+
+@app.route('/go_to_landing', methods = ['POST'])
+def go_to_landing(): 
+    return render_template('landingpage.html' , openings = opning, fave_openings = sql_logins.get_dropdown_list(main.current_user))
+
+@app.route('/to_profile', methods = ['POST'])
+def go_to_profile():
+    return render_template('profile.html', fave_openings = sql_logins.get_dropdown_list(main.current_user))
+
 #det her er bare det allerførste der sker når man kører appen
 if __name__ == '__main__':
     #brættet bliver sat til at vise startpositionen i udgangspunktet
