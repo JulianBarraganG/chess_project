@@ -40,7 +40,14 @@ def login():
         cur.close()
 
         if user:
+            cur = sql.conn.cursor()
+            cur.execute("SELECT * \
+                     FROM Users \
+                     WHERE username = %s AND password = %s;", 
+                     (username, password))
             # Successful login
+            main.current_user = cur.fetchone()[0]
+            cur.close()
             return redirect('/main')
         else:
             # Invalid credentials
@@ -107,14 +114,14 @@ def moving():
             main.currentBoard : list = main.currentBoard[:i-1]
             pgnConverter.resetBoard()
             main.main(pgnConverter.moves(main.currentBoard).getFullFen()) # Print the pos after wrong input
-    return render_template('index.html', openings = opning, in_the_move = main.in_the_move)        
+    return render_template('index.html', openings = opning, in_the_move = main.in_the_move, selected_opening = main.current_opening)        
 
 @app.route('/opening', methods=['GET','POST'])
 def pick_opening(): 
     if request.method == 'POST':
         newBoard = pgnConverter.resetBoard()
         opening = request.form["selectOpening"]
-        
+        main.current_opening = opening
         main.currentBoard : list = sql.get_specific_opening(opening)
         main.variationList : list = sql.listOfVars(opening)
         newBoard: str = pgnConverter.moves(main.currentBoard).getFullFen()
@@ -129,29 +136,25 @@ def pick_opening():
 
 @app.route('/favorite', methods=['POST'])
 def add_to_favorites():
-    if 'opening_id' in request.form:
-        opening_name = request.form['opening_id']
+    #åbner en cursor og henter pgn til den nuværende åbning
+    cur = sql.conn.cursor()
+    cur.execute(f"SELECT pgn \
+                  FROM Openings \
+                  WHERE opening = '{main.current_opening}' ",)
+    pgn = cur.fetchone()[0]
+    
+    # getting pgn
+    try:
+    # Insert the opening into the Fav_Open table  
+        cur.execute(f"INSERT INTO Fav_Open (opening_pgn, opening_name, userID) VALUES ('{pgn}','{main.current_opening}',{main.current_user})") 
+    except: 
+        #except i tilfælde af at det er en duplicate
+        print("Already in this users favourite openings")
+    sql.conn.commit()
+    cur.close()
 
-        # getting pgn
-        cur = sql.conn.cursor()
-        cur.execute(f"SELECT pgn \
-                      FROM Openings \
-                      WHERE opening = '{opening_name}' ",)
-        pgn = cur.fetchone()[0]
-        
-        # Insert the opening into the Fav_Open table (example code)
-        # current user global variable from login route.
-        cur.execute(f"INSERT INTO Fav_Open (opening_pgn, opening_name, userID) VALUES ('{pgn}','{opening_name}',{current_user})") 
-        sql.conn.commit()
 
-        # debug
-        cur.execute("SELECT * FROM Fav_Open")
-        #print(cur.fetchall())
-        cur.close()
-
-        return render_template('index.html', openings = opning)
-    else:
-        return render_template('index.html', openings = opning)
+    return render_template('index.html', openings = opning, in_the_move = main.in_the_move, selected_opening = main.current_opening)
 
 
 #det her er bare det allerførste der sker når man kører appen

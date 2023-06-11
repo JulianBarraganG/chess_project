@@ -3,8 +3,8 @@ from pgntofen import *
 import os
 
 #TO BE MODIFIED
-YOUR_PASSWORD = 'rotterne'
-YOUR_PORT = '3849'
+YOUR_PASSWORD = 'Stationsvej5'
+YOUR_PORT = '5432'
 
 # Establish a connection to server (that you setup yourself). OBS! Check that port, password etc. are correct.
 conn = psycopg2.connect(

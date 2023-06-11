@@ -12,6 +12,9 @@ py.display.set_caption("Chess")
 
 currentBoard = []
 variationList = []
+in_the_move:str = 'White'
+current_user: int = -1
+current_opening:str = ''
 
 
 #Den her funktion tegner vinduet
